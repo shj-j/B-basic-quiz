@@ -18,7 +18,7 @@ public class UserService {
     public User getUser(Long id) {
         User user = userRepository.findById(id);
         if (user == null){
-            throw new UserNotFoundException("请求的资源不存在。");
+            throw new UserNotFoundException("用户不存在");
         }else {
             return user;
         }

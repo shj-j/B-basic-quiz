@@ -26,10 +26,16 @@ public class UserControllerTest {
     EducationRepository educationRepository;
 
     @Test
-    void should_get_user() throws Exception {
-        mockMvc.perform(get("/users/0"))
+    void should_get_user_if_user_exist() throws Exception {
+        mockMvc.perform(get("/users/1"))
                 .andExpect(jsonPath("$.name").value("KAMIL"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_not_get_user_if_user_not_exist() throws Exception {
+        mockMvc.perform(get("/users/0"))
+                .andExpect(jsonPath("$.message").value("用户不存在"));
     }
 
     @Test
@@ -73,6 +79,24 @@ public class UserControllerTest {
                 .contentType("application/json;charset=UTF-8")
                 .characterEncoding("UTF-8"))
                 .andExpect(jsonPath("$.message").value("用户已存在"));
+    }
+
+    @Test
+    void should_not_create_user_if_avatar_not_validated() throws Exception {
+        User user = User.builder()
+                .id((long) 1)
+                .name("KAMIL")
+                .age((long) 24)
+                .avatar("http")
+                .description("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, non, dolorem, cumque distinctio magni quam expedita velit laborum sunt amet facere tempora ut fuga aliquam ad asperiores voluptatem dolorum! Quasi.")
+                .build();
+        String data = new ObjectMapper().writeValueAsString(user);
+
+        mockMvc.perform(post("/users")
+                .content(data)
+                .contentType("application/json;charset=UTF-8")
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isBadRequest());
     }
 
 }
