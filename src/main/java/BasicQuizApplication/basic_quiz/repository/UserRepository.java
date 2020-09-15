@@ -13,7 +13,7 @@ public class UserRepository {
 
     {
         userList.add(User.builder()
-                .id((long) 0)
+                .id((long) 1)
                 .name("KAMIL")
                 .age((long) 24)
                 .avatar("https://inews.gtimg.com/newsapp_match/0/3581582328/0")

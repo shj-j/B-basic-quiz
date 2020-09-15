@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Educations {
+public class Education {
     private Long userId;
     private Long year;
-    private String tile;
+    private String title;
     private String description;
 }
