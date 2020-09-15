@@ -1,5 +1,6 @@
 package BasicQuizApplication.basic_quiz.controller;
 
+import BasicQuizApplication.basic_quiz.domain.Education;
 import BasicQuizApplication.basic_quiz.domain.User;
 import BasicQuizApplication.basic_quiz.repository.EducationRepository;
 import BasicQuizApplication.basic_quiz.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,7 +37,7 @@ public class UserControllerTest {
     @Test
     void should_not_get_user_if_user_not_exist() throws Exception {
         mockMvc.perform(get("/users/0"))
-                .andExpect(jsonPath("$.message").value("用户不存在"));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -78,7 +80,7 @@ public class UserControllerTest {
                 .content(data)
                 .contentType("application/json;charset=UTF-8")
                 .characterEncoding("UTF-8"))
-                .andExpect(jsonPath("$.message").value("用户已存在"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -97,6 +99,23 @@ public class UserControllerTest {
                 .contentType("application/json;charset=UTF-8")
                 .characterEncoding("UTF-8"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_education_if_user_exist() throws Exception {
+        Education education = Education.builder()
+                .year((long) 2009)
+                .title("First level graduation in Graphic Design")
+                .description("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, non, dolorem, cumque distinctio magni quam expedita velit laborum sunt amet facere tempora ut fuga aliquam ad asperiores voluptatem dolorum! Quasi.")
+                .build();
+        String data = new ObjectMapper().writeValueAsString(education);
+
+        mockMvc.perform(post("/users/1/educations")
+                .content(data)
+                .contentType("application/json;charset=UTF-8")
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isCreated());
+        assertEquals( educationRepository.findByUserId((long)1).size(), 3);
     }
 
 }

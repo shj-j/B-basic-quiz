@@ -19,6 +19,7 @@ public class EducationRepository {
                 .title("Secondary school specializing in artistic")
                 .userId((long) 1)
                 .build());
+
         educationList.add(Education.builder()
                 .description("Aspernatur, mollitia, quos maxime eius suscipit sed beatae ducimus quaerat quibusdam perferendis? Iusto, quibusdam asperiores unde repellat.")
                 .year((long) 2009)
@@ -28,5 +29,10 @@ public class EducationRepository {
     }
     public List<Education> findByUserId(Long id) {
         return educationList.stream().filter(education -> education.getUserId() == id).collect(Collectors.toList());
+    }
+
+    public void save(Long id , Education education) {
+        education.setUserId(id);
+        educationList.add(education);
     }
 }

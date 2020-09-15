@@ -27,7 +27,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
-
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(id));
     }
 
@@ -39,6 +38,11 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity createUser(@RequestBody @Valid User user) {
         userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @PostMapping("/{id}/educations")
+    public ResponseEntity addUserEducation(@PathVariable Long id, @RequestBody @Valid Education education) {
+        educationService.addEducation(id, education);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
