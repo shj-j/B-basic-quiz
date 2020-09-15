@@ -40,13 +40,7 @@ public class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void should_get_user_educations() throws Exception {
-        mockMvc.perform(get("/users/1/educations"))
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].year").value(2005))
-                .andExpect(status().isOk());
-    }
+
     @Test
     void should_create_user_if_user_not_exist() throws Exception {
         User user = User.builder()
@@ -98,41 +92,6 @@ public class UserControllerTest {
                 .content(data)
                 .contentType("application/json;charset=UTF-8")
                 .characterEncoding("UTF-8"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotAcceptable());
     }
-
-    @Test
-    void should_add_education_if_user_exist() throws Exception {
-        Education education = Education.builder()
-                .year((long) 2009)
-                .title("First level graduation in Graphic Design")
-                .description("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, non, dolorem, cumque distinctio magni quam expedita velit laborum sunt amet facere tempora ut fuga aliquam ad asperiores voluptatem dolorum! Quasi.")
-                .build();
-        String data = new ObjectMapper().writeValueAsString(education);
-
-        mockMvc.perform(post("/users/1/educations")
-                .content(data)
-                .contentType("application/json;charset=UTF-8")
-                .characterEncoding("UTF-8"))
-                .andExpect(status().isCreated());
-        assertEquals( educationRepository.findByUserId((long)1).size(), 3);
-    }
-
-    @Test
-    void should_not_add_education_if_description_not_valid() throws Exception {
-        Education education = Education.builder()
-                .year((long) 2009)
-                .title("First level graduation in Graphic Design")
-                .description("")
-                .build();
-        String data = new ObjectMapper().writeValueAsString(education);
-
-        mockMvc.perform(post("/users/1/educations")
-                .content(data)
-                .contentType("application/json;charset=UTF-8")
-                .characterEncoding("UTF-8"))
-                .andExpect(status().isBadRequest());
-        assertEquals( educationRepository.findByUserId((long)1).size(), 2);
-    }
-
 }

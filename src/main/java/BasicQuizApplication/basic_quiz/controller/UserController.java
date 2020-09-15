@@ -2,15 +2,14 @@ package BasicQuizApplication.basic_quiz.controller;
 
 import BasicQuizApplication.basic_quiz.domain.Education;
 import BasicQuizApplication.basic_quiz.domain.User;
-import BasicQuizApplication.basic_quiz.exception.UserExistException;
 import BasicQuizApplication.basic_quiz.service.EducationService;
 import BasicQuizApplication.basic_quiz.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import java.util.List;
 
 @RestController
@@ -18,11 +17,9 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     final UserService userService;
-    final EducationService educationService;
 
-    public UserController(UserService userService, EducationService educationService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.educationService = educationService;
     }
 
     @GetMapping("/{id}")
@@ -30,20 +27,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(id));
     }
 
-    @GetMapping("/{id}/educations")
-    public ResponseEntity<List<Education>> getUserEducations(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(educationService.getUserEducation(id));
-    }
 
     @PostMapping("")
     public ResponseEntity createUser(@RequestBody @Valid User user) {
+        if(user.getName().getBytes().length < 1 || user.getName().getBytes().length > 128) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "输入用户名不符合规范");
+        }else if(user.getAvatar().getBytes().length < 8 || user.getAvatar().getBytes().length > 512) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "输入Avatar不符合规范");
+        }else if(user.getDescription().getBytes().length > 1024) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "输入Description不符合规范");
+        }
         userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @PostMapping("/{id}/educations")
-    public ResponseEntity addUserEducation(@PathVariable Long id, @RequestBody @Valid Education education) {
-        educationService.addEducation(id, education);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+
 
 }
