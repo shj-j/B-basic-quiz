@@ -2,6 +2,7 @@ package BasicQuizApplication.basic_quiz.controller;
 
 import BasicQuizApplication.basic_quiz.domain.Education;
 import BasicQuizApplication.basic_quiz.domain.User;
+import BasicQuizApplication.basic_quiz.exception.UserExistException;
 import BasicQuizApplication.basic_quiz.service.EducationService;
 import BasicQuizApplication.basic_quiz.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,12 @@ public class UserController {
     @GetMapping("/{id}/educations")
     public ResponseEntity<List<Education>> getUserEducations(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(educationService.getUserEducation(id));
+    }
+
+    @PostMapping("")
+    public ResponseEntity createUser(@RequestBody User user) throws UserExistException {
+        userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

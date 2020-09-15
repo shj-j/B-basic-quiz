@@ -1,6 +1,7 @@
 package BasicQuizApplication.basic_quiz.service;
 
 import BasicQuizApplication.basic_quiz.domain.User;
+import BasicQuizApplication.basic_quiz.exception.UserExistException;
 import BasicQuizApplication.basic_quiz.exception.UserNotFoundException;
 import BasicQuizApplication.basic_quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,15 @@ public class UserService {
             throw new UserNotFoundException("请求的资源不存在。");
         }else {
             return user;
+        }
+    }
+
+    public void createUser(User user) throws UserExistException {
+        User existUser = userRepository.findById(user.getId());
+        if( existUser != null){
+            throw new UserExistException("用户已存在");
+        }else {
+            userRepository.save(user);
         }
     }
 }

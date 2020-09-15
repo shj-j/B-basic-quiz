@@ -27,4 +27,8 @@ public class UserRepository {
     public List<User> findAll() {
         return userList;
     }
+
+    public void save(User user) {
+        userList.add(user);
+    }
 }
