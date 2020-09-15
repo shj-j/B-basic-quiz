@@ -118,4 +118,21 @@ public class UserControllerTest {
         assertEquals( educationRepository.findByUserId((long)1).size(), 3);
     }
 
+    @Test
+    void should_not_add_education_if_description_not_valid() throws Exception {
+        Education education = Education.builder()
+                .year((long) 2009)
+                .title("First level graduation in Graphic Design")
+                .description("")
+                .build();
+        String data = new ObjectMapper().writeValueAsString(education);
+
+        mockMvc.perform(post("/users/1/educations")
+                .content(data)
+                .contentType("application/json;charset=UTF-8")
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isBadRequest());
+        assertEquals( educationRepository.findByUserId((long)1).size(), 2);
+    }
+
 }
