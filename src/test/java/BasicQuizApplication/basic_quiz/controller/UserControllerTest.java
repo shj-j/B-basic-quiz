@@ -59,6 +59,7 @@ public class UserControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    // GTB: 创建 user 时，不需要提供 id 字段，server 端应该忽略改字段
     @Test
     void should_not_create_user_if_user_exist() throws Exception {
         User user = User.builder()

@@ -31,6 +31,7 @@ public class EducationService {
 
     public void addEducation(Long id, Education education) {
         User user = userRepository.findById(id);
+        // GTB: - user 是 null，异常为"用户已存在"？
         if ( user == null  ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "用户已存在");
         }

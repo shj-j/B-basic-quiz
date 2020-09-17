@@ -30,6 +30,7 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity createUser(@RequestBody @Valid User user) {
+        // GTB: - 通过自定义 annotation 来实现比较好
         if(user.getName().getBytes().length < 1 || user.getName().getBytes().length > 128) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "输入用户名不符合规范");
         }else if(user.getAvatar().getBytes().length < 8 || user.getAvatar().getBytes().length > 512) {

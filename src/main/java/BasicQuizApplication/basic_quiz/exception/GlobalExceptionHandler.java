@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+// GTB: - 没有删除不需要的代码 GlobalExceptionHandler
 //@ControllerAdvice
 //public class GlobalExceptionHandler {
 //    @ExceptionHandler(UserNotFoundException.class)

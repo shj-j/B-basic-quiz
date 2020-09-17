@@ -28,6 +28,7 @@ public class EducationRepository {
                 .build());
     }
     public List<Education> findByUserId(Long id) {
+        // GTB: - IDEA 都提示了不要用 ==
         return educationList.stream().filter(education -> education.getUserId() == id).collect(Collectors.toList());
     }
 
