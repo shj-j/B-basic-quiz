@@ -20,21 +20,16 @@ public class EducationService {
     UserRepository userRepository;
 
     public List<Education> getUserEducation(Long id) {
-        User user = userRepository.findById(id);
-        List<Education> educationList = educationRepository.findByUserId(id);
-        if ( user == null  ){
-           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "用户不存在");
-        }else {
-            return educationList;
-        }
+        userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "用户不存在"));
+
+        return educationRepository.findAllByUserId(id);
     }
 
     public void addEducation(Long id, Education education) {
-        User user = userRepository.findById(id);
-        // GTB: - user 是 null，异常为"用户已存在"？
-        if ( user == null  ) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "用户已存在");
-        }
-        educationRepository.save(id, education);
+        userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "用户不存在"));
+
+        educationRepository.save(education);
     }
 }
